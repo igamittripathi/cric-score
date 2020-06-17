@@ -1,3 +1,3 @@
-const PlayerTypes: string[] = ['batsman', 'boller']
+const PlayerTypes: string[] = ['batsman', 'bowler']
 
 export default  PlayerTypes;

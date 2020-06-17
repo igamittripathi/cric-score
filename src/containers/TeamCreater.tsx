@@ -1,8 +1,10 @@
 import React, { useState, FunctionComponent as FC, useEffect } from 'react';
 import { Textbox, Player } from '../components';
 import { PlayerTypes } from '../constants'
+import FormControl from '@material-ui/core/FormControl';
+import { createStyles, makeStyles, withStyles, Theme } from '@material-ui/core/styles';
 
-type playertype = 'batsman' | 'boller';
+type playertype = 'batsman' | 'bowler' | '';
 
 interface IPlayer {
     name: string;
@@ -23,7 +25,7 @@ const TeamCreater: FC = () => {
     useEffect(() => {
         const players: IPlayer[] = [];
         for (let i = 0; i < 11; i++) {
-            players.push({ name: '', type: 'batsman' })
+            players.push({ name: '', type: '' })
         }
         setTeams({ ...{ name: '', playres: [...players] } })
     }, [])
@@ -48,7 +50,7 @@ const TeamCreater: FC = () => {
     }
 
     return (<div>
-        <Textbox onChange={teamNameHandler} value={teams.name} label="Team Name" />
+        <Textbox onChange={teamNameHandler} value={teams.name} placeholder="Team Name" />
         {teams.playres.map((item, idx) => {
             return (<div key={idx} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 {idx + 1} <Player options={PlayerTypes}
