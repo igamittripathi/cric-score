@@ -33,19 +33,28 @@ const TeamCreater: FC = () => {
         console.log(teams);
     }
 
-    const nameChange = (e:any) => {
-
+    const nameChange = (e: any, idx: number) => {
+       const playres = teams.playres;
+       playres[idx].name = e.target.value;
+       setTeams({ ...{ name: teams.name, playres: [...playres] } })
+       console.log(teams);
     }
 
-    const playerTypeChange =(e:any)=> {
-
+    const playerTypeChange = (e: any, idx: number) => {
+        const playres = teams.playres;
+       playres[idx].type = e.target.value;
+       setTeams({ ...{ name: teams.name, playres: [...playres] } })
+       console.log(teams);
     }
 
     return (<div>
         <Textbox onChange={teamNameHandler} value={teams.name} label="Team Name" />
         {teams.playres.map((item, idx) => {
-            return (<div key={idx}>
-                {idx + 1} <Player options={PlayerTypes} nameChange={nameChange} playerTypeChange={playerTypeChange} type={item.type} />
+            return (<div key={idx} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                {idx + 1} <Player options={PlayerTypes}
+                    nameChange={(e: any) => {nameChange(e, idx)}}
+                    playerTypeChange={(e: any) => {playerTypeChange(e, idx)}}
+                    type={item.type} />
             </div>)
         })}
 
