@@ -1,3 +1,1 @@
-export function* rootSaga() {
-    console.log('Hello Sagas!')
-  }
+export * from './CreterSaga';

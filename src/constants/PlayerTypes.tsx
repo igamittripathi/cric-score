@@ -1,3 +1,1 @@
-const PlayerTypes: string[] = ['batsman', 'bowler']
-
-export default  PlayerTypes;
+export const PlayerTypes: string[] = ['batsman', 'bowler']

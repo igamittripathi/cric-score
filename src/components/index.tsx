@@ -1,11 +1,5 @@
-import Textbox from "./Textbox";
-import Dropdwon from "./Dropdown";
-import Player from "./Player"
-import Input from "./Input"
-
-export {
-    Textbox,
-    Dropdwon,
-    Player,
-    Input
-}
+export * from "./Textbox";
+export * from "./Dropdown";
+export * from "./Player";
+export * from "./Input";
+export * from "./Team";

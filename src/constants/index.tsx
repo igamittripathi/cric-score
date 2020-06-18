@@ -1,5 +1,2 @@
-import PlayerTypes from './PlayerTypes';
-
-export {
-    PlayerTypes
-}
+export * from './PlayerTypes';
+export * from './BowlResult'

@@ -1,3 +1,1 @@
-import TeamCreater from './TeamCreater'
-
-export {TeamCreater}
+export * from './TeamCreater';

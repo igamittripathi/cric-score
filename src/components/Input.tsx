@@ -1,7 +1,7 @@
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 
-const Input = withStyles((theme: Theme) =>
+export const Input = withStyles((theme: Theme) =>
   createStyles({
     root: {
       'label + &': {
@@ -12,6 +12,7 @@ const Input = withStyles((theme: Theme) =>
       borderRadius: 4,
       position: 'relative',
       marginRight:5,
+      width:'200px',
       backgroundColor: theme.palette.background.paper,
       border: '1px solid #ced4da',
       fontSize: 16,
@@ -31,12 +32,9 @@ const Input = withStyles((theme: Theme) =>
         '"Segoe UI Symbol"',
       ].join(','),
       '&:focus': {
-        borderRadius: 4,
         borderColor: '#80bdff',
         boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
       },
     },
   }),
 )(InputBase);
-
-export default Input;
