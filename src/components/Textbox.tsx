@@ -25,7 +25,8 @@ export const Textbox = ({ id, name, onChange, value,placeholder,required=false,e
     const classes = useStyles();
     return (
         <FormControl className={classes.margin}>
-            <InputLabel htmlFor={'customized-textbox'+id}>{placeholder}</InputLabel>
+            <InputLabel required={required}
+                error={error} htmlFor={'customized-textbox'+id}>{placeholder}</InputLabel>
             <Input
                 name={name}
                 onChange={onChange}

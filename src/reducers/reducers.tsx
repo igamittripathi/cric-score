@@ -1,8 +1,7 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
+import {TeamReducers } from './TeamReducres'
 
 export const rootReducer =  combineReducers({
-    team:()=>{
-        return "state" 
-    },
+    teams:TeamReducers,
 })
 export type RootState = ReturnType<typeof rootReducer>;

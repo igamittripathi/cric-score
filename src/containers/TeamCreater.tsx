@@ -3,9 +3,10 @@ import { Team } from '../components';
 import { PlayerTypes } from '../constants'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import { ITeam, ITeams,IPlayer, playerType } from '../interfaces';
-import {useDispatch} from 'react-redux';
-import { saveTeam } from '../actions';
+import { ITeam, ITeams, IPlayer, playerType } from '../interfaces';
+import { useDispatch, useSelector } from 'react-redux';
+import { SaveTeams } from '../actions';
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -19,6 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const TeamCreater: FC = () => {
     const classes = useStyles();
+    let history = useHistory();
     const [teams, setTeams] = useState<ITeams>({
         team_a: {
             name: '',
@@ -31,7 +33,9 @@ export const TeamCreater: FC = () => {
             id: Math.floor(Math.random() * 100)
         }
     })
-const dispatch =useDispatch();
+
+    const teamsData = useSelector((state: any) => state.teams)
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const { team_a, team_b } = { ...teams };
@@ -50,7 +54,6 @@ const dispatch =useDispatch();
             team_b.name = e.target.value;
         }
         setTeams({ team_a, team_b })
-        console.log(teams);
     }
 
     const onNameChangeHandler = (e: React.ChangeEvent<HTMLInputElement>, idx: number, _team: ITeam) => {
@@ -66,12 +69,11 @@ const dispatch =useDispatch();
             _teams = { team_a, team_b: { ..._team, playres } };
         }
         setTeams({ ..._teams })
-        console.log(teams);
     }
 
     const onPlayerTypeChangeHandler = (e: React.ChangeEvent<{ value: unknown }>, idx: number, _team: ITeam) => {
         const { team_a, team_b } = { ...teams };
-        let playres:IPlayer[] = [], _teams;
+        let playres: IPlayer[] = [], _teams;
         if (team_a.id === _team.id) {
             playres = team_a.playres;
             playres[idx].type = e.target.value as playerType;
@@ -82,13 +84,12 @@ const dispatch =useDispatch();
             _teams = { team_a, team_b: { ..._team, playres } };
         }
         setTeams({ ..._teams })
-        console.log(teams);
     }
 
     const onSubmit = (e: any) => {
         e?.preventDefault();
-        console.log(e);
-        dispatch(saveTeam(teams));
+        dispatch(SaveTeams(teams));
+        history.push('/matchstart')
     }
 
     return (

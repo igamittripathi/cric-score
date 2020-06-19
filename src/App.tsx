@@ -1,11 +1,12 @@
 import React from 'react';
 import './App.css';
-import { TeamCreater } from './containers'
+import { AppRoute } from './Route';
+
 
 function App() {
   return (
     <div className="App">
-     <TeamCreater/>
+      <AppRoute />
     </div>
   );
 }

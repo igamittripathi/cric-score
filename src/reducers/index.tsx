@@ -1,5 +1,2 @@
-import {rootReducer} from './reducers'
-
-export {
-    rootReducer
-}
+export * from './reducers';
+export * from './TeamReducres'

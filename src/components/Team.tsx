@@ -18,8 +18,8 @@ export const Team = ({ onTeamNameChangeHandler, onNameChangeHandler, onPlayerTyp
             {team.playres.map((item: IPlayer, idx: number) => {
                 return (<div key={idx} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     {idx + 1} <Player options={playerTypes}
-                        nameChange={(e: any) => { onNameChangeHandler(e, idx, team) }}
-                        playerTypeChange={(e: any) => { onPlayerTypeChangeHandler(e, idx, team) }}
+                        onNameChange={(e: any) => { onNameChangeHandler(e, idx, team) }}
+                        onPlayerTypeChange={(e: any) => { onPlayerTypeChangeHandler(e, idx, team) }}
                         type={item.type} />
                 </div>)
             })}
