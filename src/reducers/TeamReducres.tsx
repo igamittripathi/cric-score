@@ -8,6 +8,6 @@ export const TeamReducers = (state: any = {}, action: { type: string, payload: a
             break;
         default:
             return state;
-            break; 
+            break;
     }
 }

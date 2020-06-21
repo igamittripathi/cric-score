@@ -8,7 +8,6 @@ function* saveTeamsData(action: any) {
   if (res) {
     yield put(PostSaveTeam({ ...action.payload, ...res }))
   }
-  console.log(res);
 }
 
 function* saveTeams() {

@@ -4,7 +4,7 @@ import { PlayerTypes } from '../constants'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { ITeam, ITeams, IPlayer, playerType } from '../interfaces';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { SaveTeams } from '../actions';
 import { useHistory } from "react-router-dom";
 
@@ -23,25 +23,39 @@ export const TeamCreater: FC = () => {
     let history = useHistory();
     const [teams, setTeams] = useState<ITeams>({
         team_a: {
-            name: '',
+            name: 'Team A',
             playres: [],
-            id: Math.floor(Math.random() * 100)
+            id: Math.floor(Math.random() * 100),
+            totalRun: 0,
+            overs: []
         },
         team_b: {
-            name: '',
+            name: 'Team B',
             playres: [],
-            id: Math.floor(Math.random() * 100)
+            id: Math.floor(Math.random() * 100),
+            totalRun: 0,
+            overs: []
         }
     })
 
-    const teamsData = useSelector((state: any) => state.teams)
+    const team = useSelector((state: any) => state.teams)
     const dispatch = useDispatch();
 
     useEffect(() => {
         const { team_a, team_b } = { ...teams };
         for (let i = 0; i < 11; i++) {
-            team_a.playres.push({ name: '', type: '', teamId: 'TeamA' })
-            team_b.playres.push({ name: '', type: '', teamId: 'TeamB' })
+            let _type: playerType = 'batsman';
+            if (i > 6) {
+                _type = 'bowler'
+            }
+            const playersDefaultProps = {
+                type: _type, batingOrder: i, overs: [],
+                hasStrike:false
+            }
+            let team_a_player: IPlayer = { name: 'A' + (i + 1), teamId: 'TeamA', ...playersDefaultProps }
+            let team_b_player: IPlayer = { name: 'B' + (i + 1), teamId: 'TeamB', ...playersDefaultProps }
+            team_a.playres.push({ ...team_a_player })
+            team_b.playres.push({ ...team_b_player });
         }
         setTeams({ team_a, team_b })
     }, [])

@@ -19,6 +19,7 @@ export const Team = ({ onTeamNameChangeHandler, onNameChangeHandler, onPlayerTyp
                 return (<div key={idx} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     {idx + 1} <Player options={playerTypes}
                         onNameChange={(e: any) => { onNameChangeHandler(e, idx, team) }}
+                        name={item.name}
                         onPlayerTypeChange={(e: any) => { onPlayerTypeChangeHandler(e, idx, team) }}
                         type={item.type} />
                 </div>)
