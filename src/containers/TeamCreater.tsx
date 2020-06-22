@@ -45,15 +45,15 @@ export const TeamCreater: FC = () => {
         const { team_a, team_b } = { ...teams };
         for (let i = 0; i < 11; i++) {
             let _type: playerType = 'batsman';
-            if (i > 6) {
+            if (i > 5) {
                 _type = 'bowler'
             }
             const playersDefaultProps = {
                 type: _type, batingOrder: i, overs: [],
                 hasStrike:false
             }
-            let team_a_player: IPlayer = { name: 'A' + (i + 1), teamId: 'TeamA', ...playersDefaultProps }
-            let team_b_player: IPlayer = { name: 'B' + (i + 1), teamId: 'TeamB', ...playersDefaultProps }
+            const team_a_player: IPlayer = { name: 'A' + (i + 1), teamId: 'TeamA', ...playersDefaultProps }
+            const team_b_player: IPlayer = { name: 'B' + (i + 1), teamId: 'TeamB', ...playersDefaultProps }
             team_a.playres.push({ ...team_a_player })
             team_b.playres.push({ ...team_b_player });
         }

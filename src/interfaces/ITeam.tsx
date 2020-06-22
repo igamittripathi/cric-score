@@ -13,6 +13,7 @@ export interface ITeam {
     noBowls?:number;
     wideBowls?:number;
     extraRun?:number;
+    currentBowler?: IPlayer
 }
 
 export interface ITeams {
