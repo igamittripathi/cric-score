@@ -27,6 +27,7 @@ export interface IPlayer {
     boundryFour?:number;
     boundrySix?:number;
     status?: status;
+    bowlPlayed?:number;
     batingOrder?:number; 
     hasStrike?:boolean; 
     overs?:IBowlerOver[];

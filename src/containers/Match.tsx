@@ -4,12 +4,13 @@ import { Button } from '@material-ui/core';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { ITeam, ITeams, IPlayer, IOver, IBowlerOver } from '../interfaces';
 import { ScoreCard } from '../components';
+import { isNumber } from 'util';
 
 export const Match: FC = () => {
     const teamDetails = useSelector((state: any) => state.teams);
     const [teams, setTeams] = useState<ITeams>(teamDetails);
 
-    const matchOvers: number = 10;
+    const matchOvers: number = 5;
 
     const [batingTeam, setBatingTeam] = useState<ITeam>(teams.team_a);
     const [bowlingTeam, setBowlingTeam] = useState<ITeam>(teams.team_b);
@@ -19,8 +20,6 @@ export const Match: FC = () => {
     const [extra, setExtra] = useState(0);
     const [bowlCounter, setBowlCounter] = useState<number>(0);
     const [nextInning, setNextInning] = useState<boolean>(false)
-    const [onStrike, setStrike] = useState<IPlayer>()
-    const [onNonStrike, setNonStrike] = useState<IPlayer>()
 
     useEffect(() => {
         //console.log(bowlingTeam);
@@ -61,44 +60,42 @@ export const Match: FC = () => {
         })
     }
 
-    const selectBatsMan = (players: IPlayer[], isStrike?: boolean): IPlayer => {
-        return players.find((player) => ((player.hasStrike === isStrike || !player.hasStrike) && (!player.status || player.status === 'Not Out'))) as IPlayer
+    const selectBatsMan = (players: IPlayer[], batingOrder: number): IPlayer => {
+        return JSON.parse(JSON.stringify(players.find((p: IPlayer) => p.batingOrder === batingOrder))) as IPlayer
     }
+
+    const isBatsManRun = (result: BowlResultType): boolean => {
+        return (result === 'Wide Bowl' || result === 'Wicket' || result === 'No Bowl') ? false : true
+    }
+
 
     const arrangeBatingTeam = (_batingTeam: ITeam, result: BowlResultType): ITeam => {
         const run = (result === 'Wide Bowl' || result === 'No Bowl') ? 1 : result as number;
-        const { playres } = _batingTeam;
-        const batManAtStrike: IPlayer = selectBatsMan(playres, true);
-        setStrike(Object.assign(batManAtStrike, { hasStrike: true }))
-        const batManAtNonStrike: IPlayer = selectBatsMan(_batingTeam.playres);
-        setNonStrike(Object.assign(batManAtNonStrike, { hasStrike: false }));
-
-        console.log(batManAtStrike,batManAtNonStrike)
-
-        if (result >= 6) {
-            Object.assign(batManAtStrike, {
-                totalRun: (batManAtStrike!.totalRun || 0) + (result as number),
-                boundryFour: result === 4 ? (batManAtStrike!.boundryFour || 0) + 1 : (batManAtStrike!.boundryFour || 0),
-                boundrySix: result === 6 ? (batManAtStrike!.boundrySix || 0) + 1 : (batManAtStrike!.boundrySix || 0)
-            })
+        const { playres } = JSON.parse(JSON.stringify(_batingTeam));
+        if (!_batingTeam.onStrickPlayer){
+            _batingTeam.onStrickPlayer= selectBatsMan([...playres],0);
+            _batingTeam.onNonStrickPlayer = selectBatsMan([...playres],1);
         }
-        if (result === 'Wicket') {
-            batManAtStrike.status = 'Out'
+        const { onStrickPlayer, onNonStrickPlayer} = _batingTeam;
+        Object.assign(onStrickPlayer,{
+            bowlPlayed: result !== 'Wide Bowl' ? (onStrickPlayer?.bowlPlayed || 0) + 1 : (onStrickPlayer?.bowlPlayed || 0),
+            totalRun: isBatsManRun(result) ? (onStrickPlayer?.totalRun || 0) + (result as number) : (onStrickPlayer?.totalRun || 0),
+            boundryFour: result === 4 ? (onStrickPlayer?.boundryFour || 0) + 1 : (onStrickPlayer?.boundryFour || 0),
+            boundrySix: result === 6 ? (onStrickPlayer?.boundrySix || 0) + 1 : (onStrickPlayer?.boundrySix || 0),
+            status: result === 'Wicket' ? 'Out' : 'Not Out',
+            hasStrike: result === 'Wicket' ? false : true
+        })
+        const idx = playres.findIndex((p:IPlayer)=>p.batingOrder===onStrickPlayer.batingOrder)
+        if(idx>-1){
+            playres[idx] = JSON.parse(JSON.stringify(onStrickPlayer));
         }
-        if ([1, 3, 5].findIndex((r: number) => r === result) > -1) {
-            if (_batingTeam.playres.find((p: IPlayer) => p.name === batManAtStrike.name)) {
-                batManAtStrike.hasStrike = false
-            }
-            if (_batingTeam.playres.find((p: IPlayer) => p.name === batManAtNonStrike.name)) {
-                batManAtNonStrike.hasStrike = true
-            }
+        if(isBatsManRun(result) && (result as number)/2!==0){
+            changeStrick(_batingTeam);
+            console.log(_batingTeam);
         }
-        if (playres.length > 0) {
-            playres.forEach((p: IPlayer, i: number) => {
-                if (p.name === batManAtStrike.name) {
-                    playres[i] = { ...batManAtStrike } as IPlayer
-                }
-            });
+        if(result === 'Wicket'){
+            const nextOrder = (onStrickPlayer?.batingOrder||0)> (onNonStrickPlayer?.batingOrder||0)?(onStrickPlayer?.batingOrder||0):(onNonStrickPlayer?.batingOrder||0);
+            _batingTeam.onStrickPlayer = selectBatsMan([...playres],nextOrder+1);
         }
         Object.assign(_batingTeam, {
             totalRun: result !== 'Wicket' ? (_batingTeam!.totalRun || 0) + run : (_batingTeam!.totalRun || 0),
@@ -108,13 +105,20 @@ export const Match: FC = () => {
             noBowls: result === 'No Bowl' ? (_batingTeam!.noBowls || 0) + 1 : (_batingTeam!.noBowls || 0),
             wideBowls: result === 'Wide Bowl' ? (_batingTeam!.wideBowls || 0) + 1 : (_batingTeam!.wideBowls || 0),
             extraRun: (result === 'No Bowl' || result === 'Wide Bowl') ? (_batingTeam!.extraRun || 0) + 1 : (_batingTeam!.extraRun || 0),
-            playres: [...playres]
-        })
+            playres: JSON.parse(JSON.stringify(playres)),
+            onStrickPlayer: { ..._batingTeam.onStrickPlayer },
+            onNonStrickPlayer: { ..._batingTeam.onNonStrickPlayer }
+        });
         return _batingTeam
     }
 
-    const startOver = (_batingTeam: ITeam, _bowlingTeam: ITeam): void => {
+    const changeStrick = (team: ITeam): ITeam => {
+        const onStrickPlayer = JSON.parse(JSON.stringify(team.onStrickPlayer));
+        const onNonStrickPlayer = JSON.parse(JSON.stringify(team.onNonStrickPlayer));
+        return Object.assign(team, { onNonStrickPlayer: onStrickPlayer, onStrickPlayer: onNonStrickPlayer });
+    }
 
+    const startOver = (_batingTeam: ITeam, _bowlingTeam: ITeam): void => {
         let counter: number = 0;
         let _wicketDown: number = wicketsDown;
         const bowler = getBowler(_bowlingTeam.playres);
@@ -123,7 +127,6 @@ export const Match: FC = () => {
             boundryFour: 0, boundrySix: 0, wicketFall: 0, bowlResult: [], noBowls: 0, wideBowls: 0,
         }
         _bowlingTeam.currentBowler = bowler;
-
         const _over = over;
         const timer = setInterval(() => {
             const result: BowlResultType = hitBowl();
@@ -139,11 +142,12 @@ export const Match: FC = () => {
             if (_bowlResults.findIndex((item: BowlResultType, idx: number) => item === result) > -1) {
                 counter++;
                 if (counter === 6) {
-                    counter = stopOver(_batingTeam,_bowlingTeam,bowlerOver,timer);
+                    _batingTeam = changeStrick(_batingTeam);
+                    counter = stopOver(_batingTeam, _bowlingTeam, bowlerOver, timer);
                 }
             }
             if (_batingTeam.wicketFall === 10) {
-                counter = stopOver(_batingTeam,_bowlingTeam,bowlerOver,timer);
+                counter = stopOver(_batingTeam, _bowlingTeam, bowlerOver, timer);
             }
 
             setBatingTeam({ ..._batingTeam });
@@ -154,10 +158,10 @@ export const Match: FC = () => {
         }, 1000);
     }
 
-    const stopOver=(_batingTeam:ITeam,_bowlingTeam:ITeam,bowlerOver:IBowlerOver,timer:NodeJS.Timeout)=>{
+    const stopOver = (_batingTeam: ITeam, _bowlingTeam: ITeam, bowlerOver: IBowlerOver, timer: NodeJS.Timeout) => {
         _batingTeam!.overs!.push({ bowlerName: _bowlingTeam.currentBowler?.name || '', ...bowlerOver });
-        _batingTeam.playres = JSON.parse(JSON.stringify ([..._batingTeam.playres]));
-        _bowlingTeam.playres.find((p:IPlayer)=>p.name===_bowlingTeam.currentBowler?.name)?.overs?.push(bowlerOver);
+        // _batingTeam.playres = JSON.parse(JSON.stringify([..._batingTeam.playres]));
+        _bowlingTeam.playres.find((p: IPlayer) => p.name === _bowlingTeam.currentBowler?.name)?.overs?.push(bowlerOver);
         setNextInning(true);
         clearInterval(timer);
         return 0;
@@ -166,13 +170,6 @@ export const Match: FC = () => {
     const nextOver = () => {
         over.length = 0;
         startOver({ ...batingTeam } as ITeam, { ...bowlingTeam } as ITeam);
-    }
-
-    const matchStart = () => {
-        setTeams({ ...teamDetails });
-        setBatingTeam({ ...teamDetails.team_a });
-        setBowlingTeam({ ...teamDetails.team_b });
-        startOver({ ...teamDetails.team_a }, { ...teamDetails.team_b });
     }
 
     if (!teamDetails) {
@@ -184,16 +181,28 @@ export const Match: FC = () => {
         return (isNaN(avgRR) && !isFinite(avgRR)) ? 0 : avgRR.toFixed(2);
     }
 
+    const matchStart = () => {
+        setTeams({ ...teamDetails });
+        setBatingTeam(JSON.parse(JSON.stringify( teamDetails.team_a) ));
+        setBowlingTeam(JSON.parse(JSON.stringify(teamDetails.team_b)));
+        startOver(JSON.parse(JSON.stringify(teamDetails.team_a)), JSON.parse(JSON.stringify(teamDetails.team_b)));
+    }
+
+    const nextInningStart = ()=>{
+        setBatingTeam(JSON.parse(JSON.stringify( teamDetails.team_b) ));
+        setBowlingTeam(JSON.parse(JSON.stringify(teamDetails.team_a)));
+        startOver(JSON.parse(JSON.stringify(teamDetails.team_b)), JSON.parse(JSON.stringify(teamDetails.team_a)));
+    }
+
+    const nextOverButton = () => (<Button variant="contained" color="primary" onClick={nextOver}>Next Over</Button>)
+    const nextInningButton = () => (<Button variant="contained" color="primary" onClick={nextInningStart}>Next Inning</Button>)
+
     if (!teams.team_a) {
         return (<Button variant="contained" color="primary" onClick={matchStart}>Match Start</Button>)
     }
 
-    const nextOverButton = () => <Button variant="contained" color="primary" onClick={nextOver}>Next Over</Button>
-
     return (<div>
-
         {
-            // bowlCounter === 0 ? nextOverButton() :
             <ScoreCard teamName={batingTeam.name}
                 run={batingTeam?.totalRun}
                 wicket={batingTeam?.wicketFall}
@@ -201,9 +210,13 @@ export const Match: FC = () => {
                 bowlerName={bowlingTeam.currentBowler?.name}
                 isAvgRunRateDisplay={bowlCounter === 0}
                 netRunRate={avgRunRate()}
-                overBowlResults={over} />
+                overBowlResults={over}
+                strikeBatman={batingTeam.onStrickPlayer}
+                nonStrikeBatman={batingTeam.onNonStrickPlayer}
+            />
         }
-        {bowlCounter === 0 ? nextOverButton() : ''}
+        {(bowlCounter === 0 && batingTeam?.overs?.length !== matchOvers) ? nextOverButton() : ''}
+        {batingTeam?.overs?.length === matchOvers ? nextInningButton() : ''}
     </div>
     )
 }

@@ -5,6 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { BowlResultType } from '../constants';
 import Chip from '@material-ui/core/Chip';
+import { IPlayer } from '../interfaces';
 
 const useStyles = makeStyles({
     root: {
@@ -31,28 +32,38 @@ interface IScoreCard {
     bowlerName?: string;
     overBowlResults?: Array<BowlResultType>;
     netRunRate?: number | string;
-    isAvgRunRateDisplay: boolean
+    isAvgRunRateDisplay: boolean;
+    strikeBatman?:IPlayer;
+    nonStrikeBatman?:IPlayer;
+    extraRun?:number;
 }
 
 export const ScoreCard: React.FC<IScoreCard> = (
-    { teamName, run = 0, over = 0, wicket = 0, bowlerName = '', overBowlResults = [], netRunRate = 0, isAvgRunRateDisplay }) => {
+    {strikeBatman,nonStrikeBatman,extraRun=0 ,teamName, run = 0, over = 0, wicket = 0, bowlerName = '', overBowlResults = [], netRunRate = 0, isAvgRunRateDisplay }) => {
     const classes = useStyles();
-    const bull = <span className={classes.bullet}>•</span>;
-
     return (
         <Card className={classes.root}>
             <CardContent>
                 <Typography variant="h5" className={classes.title} color="textSecondary" gutterBottom>
                     {teamName}
                 </Typography>
+
                 <Typography variant="h4" component="h2">
                     Score : {`${run}/${wicket}`}
                 </Typography>
                 <Typography className={classes.pos} color="textSecondary">
                     Over: {over}
-                </Typography>{isAvgRunRateDisplay ? <Typography variant="body2" component="p">
+                </Typography>
+                {strikeBatman ? <Typography variant="body2" component="p">
+                    {strikeBatman.name}* : {strikeBatman.totalRun || 0}
+                </Typography> : ''}
+                {nonStrikeBatman ? <Typography variant="body2" component="p">
+                    {nonStrikeBatman.name} : {nonStrikeBatman.totalRun || 0}
+                </Typography> : ''}
+                {isAvgRunRateDisplay ? <Typography variant="body2" component="p">
                     Net RR: {netRunRate}
                 </Typography> : ''}
+
                 <Typography variant="body2" component="p">
                     Bowler: {bowlerName}
                     <br />
