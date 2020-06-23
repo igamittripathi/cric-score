@@ -22,9 +22,13 @@ const useStyles = makeStyles({
     pos: {
         marginBottom: 12,
     },
+    vl: {
+        borderLeft: '3px solid #c1c1c1',
+        padding: 2
+      }
 });
 
-interface IScoreCard {
+interface IScoreCardProps {
     teamName: string;
     run?: number;
     wicket?: number;
@@ -36,10 +40,12 @@ interface IScoreCard {
     strikeBatman?:IPlayer;
     nonStrikeBatman?:IPlayer;
     extraRun?:number;
+    totalOver:number;
+    remaningBowl?:number;
 }
 
-export const ScoreCard: React.FC<IScoreCard> = (
-    {strikeBatman,nonStrikeBatman,extraRun=0 ,teamName, run = 0, over = 0, wicket = 0, bowlerName = '', overBowlResults = [], netRunRate = 0, isAvgRunRateDisplay }) => {
+export const ScoreCard: React.FC<IScoreCardProps> = React.memo<IScoreCardProps>((
+    {strikeBatman,nonStrikeBatman,extraRun=0,remaningBowl=0,totalOver ,teamName, run = 0, over = 0, wicket = 0, bowlerName = '', overBowlResults = [], netRunRate = 0, isAvgRunRateDisplay }) => {
     const classes = useStyles();
     return (
         <Card className={classes.root}>
@@ -49,10 +55,10 @@ export const ScoreCard: React.FC<IScoreCard> = (
                 </Typography>
 
                 <Typography variant="h4" component="h2">
-                    Score : {`${run}/${wicket}`}
+                    Score : {`${run}/${wicket}`} 
                 </Typography>
                 <Typography className={classes.pos} color="textSecondary">
-                    Over: {over}
+                    Over: {over}/{totalOver} <span className={classes.vl}></span> Remaining Balls: {remaningBowl}
                 </Typography>
                 {strikeBatman ? <Typography variant="body2" component="p">
                     {strikeBatman.name}* : {strikeBatman.totalRun || 0}
@@ -72,4 +78,4 @@ export const ScoreCard: React.FC<IScoreCard> = (
             </CardContent>
         </Card>
     );
-}
+})

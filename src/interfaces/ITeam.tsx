@@ -1,5 +1,4 @@
 import { IPlayer, IOver } from './IPlayer';
-import { BowlResultType } from '../constants';
 
 export interface ITeam {
     name: string;
@@ -16,6 +15,7 @@ export interface ITeam {
     currentBowler?: IPlayer;
     onStrickPlayer?: IPlayer;
     onNonStrickPlayer?: IPlayer;
+    isInningCompleted:boolean
 }
 
 export interface ITeams {

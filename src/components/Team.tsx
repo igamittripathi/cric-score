@@ -11,7 +11,7 @@ interface ITeamProps {
     playerTypes: Array<string | number>;
 }
 
-export const Team = ({ onTeamNameChangeHandler, onNameChangeHandler, onPlayerTypeChangeHandler, team, playerTypes }: ITeamProps) => {
+export const Team:React.FC<ITeamProps> = ({ onTeamNameChangeHandler, onNameChangeHandler, onPlayerTypeChangeHandler, team, playerTypes }) => {
     return (
         <div>
             <Textbox onChange={(e) => onTeamNameChangeHandler(e, team)} value={team.name} placeholder="Team Name" />

@@ -1,5 +1,6 @@
+import { ITeams } from "../interfaces"
 
-export const saveTeamDetails=(payload:any):any =>{
+export const saveTeamDetails=(payload:ITeams):Promise<{name:string}> =>{
    return fetch("https://cric-score-ad64d.firebaseio.com//teams.json",{method:'POST',body:JSON.stringify(payload)})
    .then(res=>res.json())
    .catch(ex=>{

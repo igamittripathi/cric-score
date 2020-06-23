@@ -27,14 +27,16 @@ export const TeamCreater: FC = () => {
             playres: [],
             id: Math.floor(Math.random() * 100),
             totalRun: 0,
-            overs: []
+            overs: [],
+            isInningCompleted:false
         },
         team_b: {
             name: 'Team B',
             playres: [],
             id: Math.floor(Math.random() * 100),
             totalRun: 0,
-            overs: []
+            overs: [],
+            isInningCompleted:false
         }
     })
 

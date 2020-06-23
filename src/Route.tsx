@@ -5,13 +5,14 @@ import {
     Route
 } from "react-router-dom";
 
-import { TeamCreater, Match } from './containers';
+import { TeamCreater, Match,BatingScoreCard } from './containers';
 
 export const AppRoute = () => {
     return (<Router>
         <Switch>
             <Route path="/" render={() => <TeamCreater />} exact={true} />
             <Route path="/matchstart" render={() => <Match/>} />
+            <Route path="/scorecard" render={() => <BatingScoreCard/>} />
         </Switch>
     </Router>)
 }

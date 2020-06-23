@@ -3,7 +3,7 @@ import {Input} from './Input'
 import { FormControl, InputLabel, createStyles, makeStyles, Theme } from "@material-ui/core";
 
 
-export interface ITextbox {
+export interface ITextBoxProps {
     id?: string;
     name?: string;
     value?: string;
@@ -21,7 +21,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const Textbox = ({ id, name, onChange, value,placeholder,required=false,error=false }: ITextbox) => {
+export const Textbox:React.FC<ITextBoxProps> = ({ id, name, onChange, value,placeholder,required=false,error=false }) => {
     const classes = useStyles();
     return (
         <FormControl className={classes.margin}>
