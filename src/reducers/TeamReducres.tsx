@@ -3,6 +3,9 @@ export const TeamReducers = (state: any = {}, action: { type: string, payload: a
         case 'SAVE_TEAM_INIT':
             return { ...state, ...action.payload };
             break;
+        case 'UPDATE_TEAMS_INIT':
+            return { ...state, ...action.payload };
+            break;
         case 'SAVE_TEAM_SUCCESS':
             return { ...state, ...action.payload };
             break;

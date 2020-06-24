@@ -31,4 +31,5 @@ export interface IPlayer {
     batingOrder?:number; 
     hasStrike?:boolean; 
     overs?:IBowlerOver[];
+    strikeRate?:number|string;
 }

@@ -4,11 +4,14 @@ import { Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { ITeam, ITeams, IPlayer, IOver, IBowlerOver } from '../interfaces';
 import { ScoreCard, Cricle } from '../components';
+import { UpdateTeams } from '../actions';
+import { useHistory, Link } from "react-router-dom";
 
 export const Match: FC = () => {
     const teamDetails = useSelector((state: any) => state.teams);
     const [teams, setTeams] = useState<ITeams>(teamDetails);
-
+    const dispatch = useDispatch();
+    const history = useHistory();
     const matchOvers: number = 2;
 
     const [batingTeam, setBatingTeam] = useState<ITeam>(teams.team_a);
@@ -138,26 +141,38 @@ export const Match: FC = () => {
             }
             bowlerOver = aggangeBowlerOver({ ...bowlerOver }, result, _over)
             _batingTeam = arrangeBatingTeam({ ..._batingTeam }, result)
-
+            let isSaveRecord = false;
             if (_bowlResults.findIndex((item: BowlResultType, idx: number) => item === result) > -1) {
                 counter++;
                 if (counter === 6) {
                     _batingTeam = rotateStrike(_batingTeam);
                     counter = stopOver(_batingTeam, _bowlingTeam, bowlerOver, timer);
+                    isSaveRecord = true;
                 }
             }
-           
+
             if (_batingTeam.wicketFall === 10) {
                 counter = stopOver(_batingTeam, _bowlingTeam, bowlerOver, timer);
                 _batingTeam.isInningCompleted = true;
+                isSaveRecord = true;
             }
-            if(_bowlingTeam.isInningCompleted && calculateResult().name===_batingTeam.name){
+
+            if (_bowlingTeam.isInningCompleted && calculateResult().name === _batingTeam.name) {
                 _batingTeam.isInningCompleted = true;
                 clearInterval(timer);
+                isSaveRecord = true;
             }
+            if (isSaveRecord) {
+                if (!_bowlingTeam.isInningCompleted) {
+                    dispatch(UpdateTeams({ team_a: _batingTeam, team_b: _bowlingTeam }))
+                }
+                else {
+                    dispatch(UpdateTeams({ team_b: _batingTeam, team_a: _bowlingTeam }))
+                }
+            }
+
             setBatingTeam({ ..._batingTeam });
             setBowlingTeam({ ..._bowlingTeam });
-
             setOver(_over);
             setBowlCounter(counter);
         }, 1000);
@@ -213,12 +228,19 @@ export const Match: FC = () => {
         return (<Button variant="contained" color="primary" onClick={matchStart}>Match Start</Button>)
     }
 
-    const calculateResult = ():ITeam => {
+    const calculateResult = (): ITeam => {
         return (batingTeam.totalRun || 0) > (bowlingTeam.totalRun || 0) ? batingTeam : bowlingTeam;
     }
 
+
+
     if (batingTeam.isInningCompleted && bowlingTeam.isInningCompleted) {
-    return (<div>Result: {calculateResult().name} win</div>)
+        return (<div>
+            <span>Result: {calculateResult().name} win </span>
+            <Button variant="contained" color="primary">
+                <Link to="/scorecard">Batting Score Card</Link>
+            </Button>
+        </div>)
     }
 
     return (<div>
