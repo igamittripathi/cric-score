@@ -1,31 +1,46 @@
 import React, { useState, FunctionComponent as FC, useEffect } from 'react';
 import { BowlResults, BowlResultType } from '../constants';
-import { Button } from '@material-ui/core';
+import { Button, Card, CardContent, Typography, CircularProgress } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { ITeam, ITeams, IPlayer, IOver, IBowlerOver } from '../interfaces';
 import { ScoreCard, Cricle } from '../components';
-import { UpdateTeams } from '../actions';
+import { UpdateTeams, GetTeams } from '../actions';
 import { useHistory, Link } from "react-router-dom";
+import classes from '*.module.css';
 
 export const Match: FC = () => {
     const teamDetails = useSelector((state: any) => state.teams);
-    const [teams, setTeams] = useState<ITeams>(teamDetails);
     const dispatch = useDispatch();
     const history = useHistory();
-    const matchOvers: number = 2;
+    const matchOvers: number = 10;
 
-    const [batingTeam, setBatingTeam] = useState<ITeam>(teams.team_a);
-    const [bowlingTeam, setBowlingTeam] = useState<ITeam>(teams.team_b);
+    const [batingTeam, setBatingTeam] = useState<ITeam>();
+    const [bowlingTeam, setBowlingTeam] = useState<ITeam>();
     const [bowlResult, setBowlResult] = useState<BowlResultType | ''>('');
     const [wicketsDown, setWicketDown] = useState<number>(0);
     const [over, setOver] = useState<BowlResultType[]>([]);
     const [bowlCounter, setBowlCounter] = useState<number>(0);
-    const [isFirstInningEnd, setFirstInningEnded] = useState<boolean>(false)
-    const [nextInningEnd, setNextInningEnd] = useState<boolean>(false)
+    const [isMatchCompleted, setmatchCompleted] = useState<boolean>(false)
 
-    useEffect(() => {
-        //console.log(bowlingTeam);
-    }, [teamDetails, bowlingTeam]);
+    React.useEffect(() => {
+        dispatch(GetTeams());
+    }, []);
+
+    React.useEffect(() => {
+        if (Object.keys(teamDetails).length) {
+            if (teamDetails.team_a.isInningCompleted) {
+                setBatingTeam(teamDetails.team_b)
+                setBowlingTeam(teamDetails.team_a)
+            } else {
+                setBatingTeam(teamDetails.team_a)
+                setBowlingTeam(teamDetails.team_b)
+            }
+            if (teamDetails.team_a.isInningCompleted && teamDetails.team_b.isInningCompleted) {
+                setmatchCompleted(true);
+            }
+        }
+    }, [teamDetails]);
+
 
     const hitBowl = (): BowlResultType => {
         return BowlResults[Math.floor(Math.random() * BowlResults.length)] as BowlResultType;
@@ -52,13 +67,13 @@ export const Match: FC = () => {
     const aggangeBowlerOver = (bowlerOver: IBowlerOver, result: BowlResultType, _over: BowlResultType[]): IBowlerOver => {
         const run = (result === 'WB' || result === 'NB') ? 1 : result as number;
         return Object.assign(bowlerOver, {
-            totalRun: result !== 'Wt' ? (bowlerOver!.totalRun || 0) + run : (bowlerOver!.totalRun || 0),
-            wicketFall: result === 'Wt' ? (bowlerOver!.wicketFall || 0) + 1 : (bowlerOver!.wicketFall || 0),
+            totalRun: result !== 'Wt' ? (bowlerOver.totalRun || 0) + run : (bowlerOver.totalRun || 0),
+            wicketFall: result === 'Wt' ? (bowlerOver.wicketFall || 0) + 1 : (bowlerOver.wicketFall || 0),
             bowlResult: [..._over],
-            boundryFour: result === 4 ? (bowlerOver!.boundryFour || 0) + 1 : (bowlerOver!.boundryFour || 0),
-            boundrySix: result === 6 ? (bowlerOver!.boundrySix || 0) + 1 : (bowlerOver!.boundrySix || 0),
-            noBowls: result === 'NB' ? (bowlerOver!.noBowls || 0) + 1 : (bowlerOver!.noBowls || 0),
-            wideBowls: result === 'WB' ? (bowlerOver!.noBowls || 0) + 1 : (bowlerOver!.noBowls || 0)
+            boundryFour: result === 4 ? (bowlerOver.boundryFour || 0) + 1 : (bowlerOver.boundryFour || 0),
+            boundrySix: result === 6 ? (bowlerOver.boundrySix || 0) + 1 : (bowlerOver.boundrySix || 0),
+            noBowls: result === 'NB' ? (bowlerOver.noBowls || 0) + 1 : (bowlerOver.noBowls || 0),
+            wideBowls: result === 'WB' ? (bowlerOver.wideBowls || 0) + 1 : (bowlerOver.wideBowls || 0)
         })
     }
 
@@ -100,13 +115,13 @@ export const Match: FC = () => {
             _batingTeam.onStrickPlayer = selectBatsMan([...playres], nextOrder + 1);
         }
         Object.assign(_batingTeam, {
-            totalRun: result !== 'Wt' ? (_batingTeam!.totalRun || 0) + run : (_batingTeam!.totalRun || 0),
-            wicketFall: result === 'Wt' ? (_batingTeam!.wicketFall || 0) + 1 : (_batingTeam!.wicketFall || 0),
-            boundryFour: result === 4 ? (_batingTeam!.boundryFour || 0) + 1 : (_batingTeam!.boundryFour || 0),
-            boundrySix: result === 6 ? (_batingTeam!.boundrySix || 0) + 1 : (_batingTeam!.boundrySix || 0),
-            noBowls: result === 'NB' ? (_batingTeam!.noBowls || 0) + 1 : (_batingTeam!.noBowls || 0),
-            wideBowls: result === 'WB' ? (_batingTeam!.wideBowls || 0) + 1 : (_batingTeam!.wideBowls || 0),
-            extraRun: (result === 'NB' || result === 'WB') ? (_batingTeam!.extraRun || 0) + 1 : (_batingTeam!.extraRun || 0),
+            totalRun: result !== 'Wt' ? (_batingTeam.totalRun || 0) + run : (_batingTeam.totalRun || 0),
+            wicketFall: result === 'Wt' ? (_batingTeam.wicketFall || 0) + 1 : (_batingTeam.wicketFall || 0),
+            boundryFour: result === 4 ? (_batingTeam.boundryFour || 0) + 1 : (_batingTeam.boundryFour || 0),
+            boundrySix: result === 6 ? (_batingTeam.boundrySix || 0) + 1 : (_batingTeam.boundrySix || 0),
+            noBowls: result === 'NB' ? (_batingTeam.noBowls || 0) + 1 : (_batingTeam.noBowls || 0),
+            wideBowls: result === 'WB' ? (_batingTeam.wideBowls || 0) + 1 : (_batingTeam.wideBowls || 0),
+            extraRun: (result === 'NB' || result === 'WB') ? (_batingTeam.extraRun || 0) + 1 : (_batingTeam.extraRun || 0),
             playres: JSON.parse(JSON.stringify(playres)),
             onStrickPlayer: { ..._batingTeam.onStrickPlayer },
             onNonStrickPlayer: { ..._batingTeam.onNonStrickPlayer }
@@ -129,6 +144,7 @@ export const Match: FC = () => {
             boundryFour: 0, boundrySix: 0, wicketFall: 0, bowlResult: [], noBowls: 0, wideBowls: 0,
         }
         _bowlingTeam.currentBowler = bowler;
+       
         const _over = over;
         const timer = setInterval(() => {
             const result: BowlResultType = hitBowl();
@@ -138,8 +154,15 @@ export const Match: FC = () => {
             if (result === 'Wt') {
                 _wicketDown++
                 setWicketDown(_wicketDown);
+                const idx = _bowlingTeam.playres.findIndex((p: IPlayer) => p.name === bowler.name)
+                const wickets = _bowlingTeam.playres[idx].wickets || 0
+                if (wickets === 0) {
+                    _bowlingTeam.playres[idx].wickets = 0;
+                }
+                if (_bowlingTeam.playres[idx].wickets)
+                    _bowlingTeam.playres[idx] = { ..._bowlingTeam.playres[idx], wickets: (wickets + 1) }
             }
-            bowlerOver = aggangeBowlerOver({ ...bowlerOver }, result, _over)
+            bowlerOver = aggangeBowlerOver({ ...bowlerOver }, result, _over);
             _batingTeam = arrangeBatingTeam({ ..._batingTeam }, result)
             let isSaveRecord = false;
             if (_bowlResults.findIndex((item: BowlResultType, idx: number) => item === result) > -1) {
@@ -157,32 +180,43 @@ export const Match: FC = () => {
                 isSaveRecord = true;
             }
 
-            if (_bowlingTeam.isInningCompleted && calculateResult().name === _batingTeam.name) {
+            if (_bowlingTeam.isInningCompleted && calculateResult(_batingTeam as ITeam,_bowlingTeam as ITeam).name === _batingTeam.name) {
+                debugger;
                 _batingTeam.isInningCompleted = true;
-                clearInterval(timer);
+                _bowlingTeam.isInningCompleted=true;
                 isSaveRecord = true;
+                stopOver(_batingTeam, _bowlingTeam, bowlerOver, timer);
             }
+            setBatingTeam({ ..._batingTeam });
+            setBowlingTeam({ ..._bowlingTeam });
+            setOver(_over);
+            setBowlCounter(counter);
             if (isSaveRecord) {
                 if (!_bowlingTeam.isInningCompleted) {
                     dispatch(UpdateTeams({ team_a: _batingTeam, team_b: _bowlingTeam }))
                 }
                 else {
-                    dispatch(UpdateTeams({ team_b: _batingTeam, team_a: _bowlingTeam }))
+                    dispatch(UpdateTeams({ team_a: _bowlingTeam, team_b: _batingTeam }))
                 }
             }
-
-            setBatingTeam({ ..._batingTeam });
-            setBowlingTeam({ ..._bowlingTeam });
-            setOver(_over);
-            setBowlCounter(counter);
         }, 1000);
     }
 
     const stopOver = (_batingTeam: ITeam, _bowlingTeam: ITeam, bowlerOver: IBowlerOver, timer: NodeJS.Timeout) => {
-        _batingTeam!.overs!.push({ bowlerName: _bowlingTeam.currentBowler?.name || '', ...bowlerOver });
+        if (_batingTeam!.overs == undefined) {
+            _batingTeam!.overs = [];
+        }
+        _batingTeam!.overs.push({ bowlerName: _bowlingTeam.currentBowler?.name || '', ...bowlerOver })
+        console.log(_batingTeam!.overs)
         _batingTeam.isInningCompleted = (_batingTeam!.overs?.length === matchOvers)
         // _batingTeam.playres = JSON.parse(JSON.stringify([..._batingTeam.playres]));
-        _bowlingTeam.playres.find((p: IPlayer) => p.name === _bowlingTeam.currentBowler?.name)?.overs?.push(bowlerOver);
+        const idx: number = _bowlingTeam.playres.findIndex((p: IPlayer) => p.name === _bowlingTeam.currentBowler?.name);
+        if (idx > -1 && _bowlingTeam.playres[idx].overs === undefined) {
+            _bowlingTeam.playres[idx] = { ..._bowlingTeam.playres[idx], overs: [bowlerOver] }
+        }
+        else {
+            _bowlingTeam.playres[idx]?.overs.push(bowlerOver);
+        }
 
         clearInterval(timer);
         return 0;
@@ -199,9 +233,6 @@ export const Match: FC = () => {
     }
 
     const matchStart = (): void => {
-        setTeams({ ...teamDetails });
-        setBatingTeam(JSON.parse(JSON.stringify(teamDetails.team_a)));
-        setBowlingTeam(JSON.parse(JSON.stringify(teamDetails.team_b)));
         startOver(JSON.parse(JSON.stringify(teamDetails.team_a)), JSON.parse(JSON.stringify(teamDetails.team_b)));
     }
 
@@ -209,7 +240,6 @@ export const Match: FC = () => {
         over.length = 0;
         teamDetails.team_a = JSON.parse(JSON.stringify(batingTeam));
         teamDetails.team_b = JSON.parse(JSON.stringify(bowlingTeam));
-        setFirstInningEnded(true);
         setBatingTeam(JSON.parse(JSON.stringify(teamDetails.team_b)));
         setBowlingTeam(JSON.parse(JSON.stringify(teamDetails.team_a)));
         startOver(JSON.parse(JSON.stringify(teamDetails.team_b)), JSON.parse(JSON.stringify(teamDetails.team_a)));
@@ -219,48 +249,65 @@ export const Match: FC = () => {
     const nextInningButton = (): JSX.Element => (<Button variant="contained" color="primary" onClick={nextInningStart}>Next Inning</Button>)
 
     const remaningBowl = (): number => {
-        console.log('batingTeam', batingTeam)
-        console.log('bowlingTeam', bowlingTeam)
         return (matchOvers * 6) - (((batingTeam?.overs?.length || 0) * 6) + bowlCounter)
     }
 
-    if (!teams.team_a) {
-        return (<Button variant="contained" color="primary" onClick={matchStart}>Match Start</Button>)
+    const calculateResult = (_batingTeam:ITeam,_bowlingTeam:ITeam): ITeam => {
+        return (_batingTeam!.totalRun || 0) > (_bowlingTeam!.totalRun || 0) ? _batingTeam! : _bowlingTeam!;
+    }
+    const declareResult = (): string => {
+        const runA = (batingTeam!.totalRun || 0);
+        const runB = (bowlingTeam!.totalRun || 0);
+        if(runA > runB){
+            return `${batingTeam!.name} beat  ${bowlingTeam!.name} by ${10 - (batingTeam!.wicketFall || 0)} wickets`; 
+        }
+        if(runA < runB){
+          return  `${bowlingTeam!.name} beat ${batingTeam!.name} by ${runB - runA} runs`;
+        }
+        return  'Match tie'
     }
 
-    const calculateResult = (): ITeam => {
-        return (batingTeam.totalRun || 0) > (bowlingTeam.totalRun || 0) ? batingTeam : bowlingTeam;
+    if (!batingTeam) {
+        return (<CircularProgress />)
     }
 
+    if (!isMatchCompleted) {
+        return (
+            <div>
+                <Cricle result={bowlResult} />
+                <ScoreCard teamName={batingTeam.name}
+                    run={batingTeam!.totalRun}
+                    totalOver={matchOvers}
+                    wicket={batingTeam!.wicketFall}
+                    over={(batingTeam!.overs?.length || 0) + '.' + bowlCounter}
+                    remaningBowl={remaningBowl()}
+                    bowlerName={bowlingTeam!.currentBowler}
+                    isAvgRunRateDisplay={bowlCounter === 0}
+                    netRunRate={avgRunRate()}
+                    overBowlResults={over}
+                    strikeBatman={batingTeam.onStrickPlayer}
+                    nonStrikeBatman={batingTeam.onNonStrickPlayer}
+                />
+                {(bowlCounter === 0 && !batingTeam.isInningCompleted) ? nextOverButton() : ''}
+                {batingTeam.isInningCompleted ? nextInningButton() : ''}
 
+            </div>
 
-    if (batingTeam.isInningCompleted && bowlingTeam.isInningCompleted) {
-        return (<div>
-            <span>Result: {calculateResult().name} win </span>
-            <Button variant="contained" color="primary">
-                <Link to="/scorecard">Batting Score Card</Link>
+        )
+    }
+
+    return (
+        <div>
+            <Card variant="outlined">
+                <CardContent>
+                    <Typography variant="h5" component="h2">
+                        {declareResult()}
+                    </Typography>
+                </CardContent>
+            </Card>
+            <Button variant="contained" color="primary" onClick={(e) => { history.push('/scorecard') }}>
+                Batting Score Card
             </Button>
-        </div>)
-    }
-
-    return (<div>
-        <Cricle result={bowlResult} />
-        <ScoreCard teamName={batingTeam.name}
-            run={batingTeam?.totalRun}
-            totalOver={matchOvers}
-            wicket={batingTeam?.wicketFall}
-            over={batingTeam?.overs?.length + '.' + bowlCounter}
-            remaningBowl={remaningBowl()}
-            bowlerName={bowlingTeam.currentBowler?.name}
-            isAvgRunRateDisplay={bowlCounter === 0}
-            netRunRate={avgRunRate()}
-            overBowlResults={over}
-            strikeBatman={batingTeam.onStrickPlayer}
-            nonStrikeBatman={batingTeam.onNonStrickPlayer}
-        />
-        {(bowlCounter === 0 && !batingTeam.isInningCompleted) ? nextOverButton() : ''}
-        {batingTeam.isInningCompleted ? nextInningButton() : ''}
-
-    </div>
+        </div>
     )
 }

@@ -8,7 +8,7 @@ export interface ITeam {
     boundryFour?:number;
     boundrySix?:number;
     wicketFall?:number;
-    overs?: IOver[],
+    overs: IOver[],
     noBowls?:number;
     wideBowls?:number;
     extraRun?:number;

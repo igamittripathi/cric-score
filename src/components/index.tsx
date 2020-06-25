@@ -6,4 +6,4 @@ export * from "./Team";
 export * from './ScoreCard'
 export * from './Cricle';
 export * from './BatingDetail'
-
+export * from './BowlingDetail'

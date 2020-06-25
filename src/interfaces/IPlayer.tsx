@@ -30,6 +30,10 @@ export interface IPlayer {
     bowlPlayed?:number;
     batingOrder?:number; 
     hasStrike?:boolean; 
-    overs?:IBowlerOver[];
+    overs:IBowlerOver[];
+    wickets?:number;
     strikeRate?:number|string;
+    economy?:number|string;
+    noBowls?:number;
+    wideBowls?:number;
 }

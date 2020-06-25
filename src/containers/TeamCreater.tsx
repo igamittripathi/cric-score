@@ -40,10 +40,10 @@ export const TeamCreater: FC = () => {
         }
     })
 
-    const team = useSelector((state: any) => state.teams)
     const dispatch = useDispatch();
 
     useEffect(() => {
+        localStorage.clear();
         const { team_a, team_b } = { ...teams };
         for (let i = 0; i < 11; i++) {
             let _type: playerType = 'batsman';
@@ -51,7 +51,9 @@ export const TeamCreater: FC = () => {
                 _type = 'bowler'
             }
             const playersDefaultProps = {
-                type: _type, batingOrder: i, overs: [],
+                type: _type, 
+                batingOrder: i, 
+                overs: [],
                 hasStrike:false
             }
             const team_a_player: IPlayer = { name: 'A' + (i + 1), teamId: 'TeamA', ...playersDefaultProps }
@@ -102,7 +104,7 @@ export const TeamCreater: FC = () => {
         setTeams({ ..._teams })
     }
 
-    const onSubmit = (e: any) => {
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e?.preventDefault();
         dispatch(SaveTeams(teams));
         history.push('/matchstart')

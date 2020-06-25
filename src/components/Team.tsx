@@ -18,9 +18,9 @@ export const Team:React.FC<ITeamProps> = ({ onTeamNameChangeHandler, onNameChang
             {team.playres.map((item: IPlayer, idx: number) => {
                 return (<div key={idx} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     {idx + 1} <Player options={playerTypes}
-                        onNameChange={(e: any) => { onNameChangeHandler(e, idx, team) }}
+                        onNameChange={(e: React.ChangeEvent<HTMLInputElement>) => { onNameChangeHandler(e, idx, team) }}
                         name={item.name}
-                        onPlayerTypeChange={(e: any) => { onPlayerTypeChangeHandler(e, idx, team) }}
+                        onPlayerTypeChange={(e:React.ChangeEvent<{value: unknown;}>) => { onPlayerTypeChangeHandler(e, idx, team) }}
                         type={item.type} />
                 </div>)
             })}
