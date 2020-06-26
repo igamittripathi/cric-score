@@ -28,7 +28,7 @@ export const TeamCreater: FC = () => {
             id: Math.floor(Math.random() * 100),
             totalRun: 0,
             overs: [],
-            isInningCompleted:false
+            isInningCompleted: false
         },
         team_b: {
             name: 'Team B',
@@ -36,10 +36,11 @@ export const TeamCreater: FC = () => {
             id: Math.floor(Math.random() * 100),
             totalRun: 0,
             overs: [],
-            isInningCompleted:false
+            isInningCompleted: false
         }
     })
 
+    const team = useSelector((state: any) => state.teams)
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -51,13 +52,15 @@ export const TeamCreater: FC = () => {
                 _type = 'bowler'
             }
             const playersDefaultProps = {
-                type: _type, 
-                batingOrder: i, 
+                type: _type,
+                batingOrder: i,
                 overs: [],
-                hasStrike:false
+                hasStrike: false,
+                isError: false,
+                isRequired: true
             }
-            const team_a_player: IPlayer = { name: 'A' + (i + 1), teamId: 'TeamA', ...playersDefaultProps }
-            const team_b_player: IPlayer = { name: 'B' + (i + 1), teamId: 'TeamB', ...playersDefaultProps }
+            const team_a_player: IPlayer = { name: 'A '+(i+1), teamId: 'TeamA', ...playersDefaultProps }
+            const team_b_player: IPlayer = { name: 'B '+(i+1), teamId: 'TeamB', ...playersDefaultProps }
             team_a.playres.push({ ...team_a_player })
             team_b.playres.push({ ...team_b_player });
         }
@@ -75,39 +78,71 @@ export const TeamCreater: FC = () => {
     }
 
     const onNameChangeHandler = (e: React.ChangeEvent<HTMLInputElement>, idx: number, _team: ITeam) => {
-        const { team_a, team_b } = { ...teams };
-        let playres = [], _teams;
-        if (team_a.id === _team.id) {
-            playres = team_a.playres;
-            playres[idx].name = e.target.value;
-            _teams = { team_b, team_a: { ..._team, playres } };
-        } else {
-            playres = team_b.playres;
-            playres[idx].name = e.target.value;
-            _teams = { team_a, team_b: { ..._team, playres } };
+        let { team_a, team_b } = { ...teams };
+        _team.playres[idx] = { ..._team.playres[idx], name: e.target.value, isError: !(e.target.value.length > 0) };
+        if (_team.id == team_a.id) {
+            team_a = _team;
         }
-        setTeams({ ..._teams })
+        else {
+            team_b = _team;
+        }
+        setTeams({ team_a, team_b })
     }
 
     const onPlayerTypeChangeHandler = (e: React.ChangeEvent<{ value: unknown }>, idx: number, _team: ITeam) => {
-        const { team_a, team_b } = { ...teams };
-        let playres: IPlayer[] = [], _teams;
-        if (team_a.id === _team.id) {
-            playres = team_a.playres;
-            playres[idx].type = e.target.value as playerType;
-            _teams = { team_b, team_a: { ..._team, playres } };
-        } else {
-            playres = team_b.playres;
-            playres[idx].type = e.target.value as playerType;
-            _teams = { team_a, team_b: { ..._team, playres } };
+        let { team_a, team_b } = { ...teams };
+        _team.playres[idx] = { ..._team.playres[idx], type: e.target.value as playerType };
+        if (_team.id == team_a.id) {
+            team_a = _team;
         }
-        setTeams({ ..._teams })
+        else {
+            team_b = _team;
+        }
+        setTeams({ team_a, team_b })
     }
 
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const onBlur = (e: React.FocusEvent<HTMLInputElement>, idx: number, _team: ITeam) => {
+        let { team_a, team_b } = { ...teams };
+        _team.playres[idx] = { ..._team.playres[idx], isError: !(e.target.value.length > 0) };
+        if (_team.id == team_a.id) {
+            team_a = _team;
+        }
+        else {
+            team_b = _team;
+        }
+        setTeams({ team_a, team_b })
+    }
+
+    const validate = (team: ITeam): boolean => {
+        let isValid = true;
+        debugger;
+        for (let i = 0; i < team.playres.length; i++) {
+            if (team.playres[i].name.length === 0) {
+                team.playres[i].isError = true;
+                isValid = false;
+                let { team_a, team_b } = { ...teams };
+                if (team.id == team_a.id) {
+                    team_a = team;
+                }
+                else {
+                    team_b = team;
+                }
+                setTeams({ team_a, team_b })
+                break;
+            }
+        }
+        if (isValid)
+            isValid = (team.name.length > 0)
+        
+        return isValid;
+    }
+
+    const onSubmit = (e: any) => {
         e?.preventDefault();
-        dispatch(SaveTeams(teams));
-        history.push('/matchstart')
+        if (validate(teams.team_a) && validate(teams.team_b)) {
+            dispatch(SaveTeams(teams));
+            history.push('/matchstart')
+        }
     }
 
     return (
@@ -118,20 +153,22 @@ export const TeamCreater: FC = () => {
                     <Team onTeamNameChangeHandler={onTeamNameChangeHandler}
                         onNameChangeHandler={onNameChangeHandler}
                         onPlayerTypeChangeHandler={onPlayerTypeChangeHandler}
+                        onNameBlur={onBlur}
                         team={teams.team_a}
                         playerTypes={PlayerTypes} />
                 </div>
-                <div style={{ borderRight: '1px solid #eee' }}></div>
+                <span style={{ borderRight: '1px solid #eee' }}></span>
                 <div style={{ marginLeft: '50px' }}>
                     <Team onTeamNameChangeHandler={onTeamNameChangeHandler}
                         onNameChangeHandler={onNameChangeHandler}
                         onPlayerTypeChangeHandler={onPlayerTypeChangeHandler}
                         team={teams.team_b}
+                        onNameBlur={onBlur}
                         playerTypes={PlayerTypes} />
                 </div>
             </div>
             <Button type="submit" variant="contained" color="primary">
-                Submit
+                Start Match
             </Button>
         </form>)
 }

@@ -42,9 +42,7 @@ export const BowlingDetail: React.FC<ITeam> = React.memo<ITeam>(({ playres, name
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {playres.map((p: IPlayer, idx: number) => {
-                        debugger;
-                        return (
+                    {playres.map((p: IPlayer, idx: number) => (
                         <TableRow key={`row-${idx}`}>
                             <TableCell>  {p.name} </TableCell>
                             <TableCell align="right">{p.overs.length}.0</TableCell>
@@ -54,7 +52,7 @@ export const BowlingDetail: React.FC<ITeam> = React.memo<ITeam>(({ playres, name
                             <TableCell align="right">{p.wideBowls || 0}</TableCell>
                             <TableCell align="right">{p.economy}</TableCell>
                         </TableRow>
-                    )})}
+                    ))}
                 </TableBody>
             </Table>
         </TableContainer >

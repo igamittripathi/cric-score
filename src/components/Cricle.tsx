@@ -9,7 +9,7 @@ interface IResultProps {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            display: 'flex',
+            display: 'inline-flex',
             '& > *': {
                 margin: theme.spacing(1)
             },

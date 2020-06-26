@@ -25,7 +25,6 @@ const useStyles = makeStyles({
 
 export const BatingDetail: React.FC<ITeam> = React.memo<ITeam>(({ playres, name, totalRun = 0, overs, noBowls = 0, wideBowls = 0, wicketFall }) => {
     const classes = useStyles();
-    debugger;
     return (
         <TableContainer component={Paper}>
             <p> {name} <strong>{totalRun}/{wicketFall}  ({overs.length} ov)</strong> R/R {(totalRun / overs.length).toFixed(2)} </p>

@@ -12,7 +12,7 @@ export const Match: FC = () => {
     const teamDetails = useSelector((state: any) => state.teams);
     const dispatch = useDispatch();
     const history = useHistory();
-    const matchOvers: number = 10;
+    const matchOvers: number = 1;
 
     const [batingTeam, setBatingTeam] = useState<ITeam>();
     const [bowlingTeam, setBowlingTeam] = useState<ITeam>();
@@ -181,7 +181,6 @@ export const Match: FC = () => {
             }
 
             if (_bowlingTeam.isInningCompleted && calculateResult(_batingTeam as ITeam,_bowlingTeam as ITeam).name === _batingTeam.name) {
-                debugger;
                 _batingTeam.isInningCompleted = true;
                 _bowlingTeam.isInningCompleted=true;
                 isSaveRecord = true;
@@ -245,7 +244,7 @@ export const Match: FC = () => {
         startOver(JSON.parse(JSON.stringify(teamDetails.team_b)), JSON.parse(JSON.stringify(teamDetails.team_a)));
     }
 
-    const nextOverButton = (): JSX.Element => (<Button variant="contained" color="primary" onClick={nextOver}>Next Over</Button>)
+    const nextOverButton = (): JSX.Element => (<Button variant="contained" color="primary" onClick={nextOver}>Start Over</Button>)
     const nextInningButton = (): JSX.Element => (<Button variant="contained" color="primary" onClick={nextInningStart}>Next Inning</Button>)
 
     const remaningBowl = (): number => {

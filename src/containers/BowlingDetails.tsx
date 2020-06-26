@@ -64,7 +64,6 @@ export const BowlingDetails: React.FC = () => {
                     noBowls +=(o.noBowls||0)
                     wideBowls +=(o.wideBowls||0)
             });
-            debugger
             playres[idx] = {...playres[idx],totalRun:run,wickets:wicket,economy:run/(p.overs.length),noBowls,wideBowls}
         })
         return playres;

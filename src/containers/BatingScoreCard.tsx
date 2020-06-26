@@ -54,7 +54,6 @@ export const BatingScoreCard: React.FC = () => {
 
     const setStrikeRate = (playres: IPlayer[]): IPlayer[] => {
         playres = playres.filter((p: IPlayer) => p.bowlPlayed)
-        debugger;
         playres.forEach((p: IPlayer, idx) => {
             playres[idx].strikeRate = strikeRate(p.totalRun, p.bowlPlayed)
         })

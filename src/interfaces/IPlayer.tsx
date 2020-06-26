@@ -17,9 +17,10 @@ export interface IOver extends IBowlerOver {
     bowlerName:string;
 }
 
-
 export interface IPlayer {
     name: string;
+    isRequired:boolean;
+    isError:boolean;
     type: playerType;
     teamId:string;
     totalRun?:number;

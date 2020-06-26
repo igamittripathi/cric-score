@@ -1,18 +1,18 @@
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles';
-import {InputBase,TextField} from '@material-ui/core';
+import { InputBase } from '@material-ui/core';
 
 export const Input = withStyles((theme: Theme) =>
   createStyles({
     root: {
       'label + &': {
-        marginTop: theme.spacing(3),
-      },
+        marginTop: theme.spacing(3)
+      }
     },
     input: {
       borderRadius: 4,
       position: 'relative',
-      marginRight:5,
-      width:'200px',
+      marginRight: 1,
+      width: '200px',
       backgroundColor: theme.palette.background.paper,
       border: '1px solid #ced4da',
       fontSize: 16,
@@ -35,6 +35,13 @@ export const Input = withStyles((theme: Theme) =>
         borderColor: '#80bdff',
         boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
       },
+      '&:invalid': {
+        //borderColor: 'red',
+        borderWidth: 1,
+        '&:focus': {
+          boxShadow: '0 0 0 0.2rem rgba(255, 26, 68, 0.25)'
+        }
+      }
     },
   }),
 )(InputBase);
