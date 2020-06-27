@@ -1,44 +1,45 @@
-import { put, take, takeEvery, all, delay, call } from 'redux-saga/effects';
+import { put,  all, call, takeLatest } from 'redux-saga/effects';
 import { saveTeamDetails,setTeamDetails,getTeamDetails } from '../services';
-import { PostSaveTeam } from '../actions';
+import { SucessResponse } from '../actions';
+import { ITeams } from '../interfaces';
 
-function* getTeamData() {
+export function* getTeamData() {
   const res = yield call(getTeamDetails)
   if (res) {
-    yield put(PostSaveTeam({ ...res }))
+    yield put(SucessResponse({ ...res }))
   }
 }
 
-function* getTeams(){
-  yield takeEvery('GET_TEAMS',getTeamData)
+export function* getTeams(){
+  yield takeLatest('GET_TEAMS',getTeamData)
 } 
 
 
-function* saveTeamsData(action: any) {
+export function* saveTeamsData(action: {type:string,payload:ITeams}) {
   const { payload } = action;
   const res = yield call(saveTeamDetails, payload)
   if (res) {
     localStorage.setItem('id',res.name);
-    yield put(PostSaveTeam({ ...action.payload, ...res }))
+    yield put(SucessResponse({ ...action.payload, ...res }))
   }
 }
 
 
-function* saveTeams() {
-  yield takeEvery("SAVE_TEAMS_INIT", saveTeamsData)
+export function* saveTeams() {
+  yield takeLatest("SAVE_TEAMS_INIT", saveTeamsData)
 }
 
 
-function* updateTeamsData(action: any) {
+export function* updateTeamsData(action: {type:string,payload:ITeams}) {
   const { payload } = action;
   const res = yield call(setTeamDetails, payload)
   if (res) {
-    yield put(PostSaveTeam({ ...action.payload, ...res }))
+    yield put(SucessResponse({ ...action.payload }))
   }
 }
 
-function* updateTeams(){
-  yield takeEvery('UPDATE_TEAMS_INIT',updateTeamsData)
+export function* updateTeams(){
+  yield takeLatest('UPDATE_TEAMS_INIT',updateTeamsData)
 } 
 
 // notice how we now only export the rootSaga

@@ -85,7 +85,7 @@ export const BatingScoreCard: React.FC = () => {
         if (runA < runB) {
             return `${teamB.name} beat ${teamA.name} by ${10 - (teamB.wicketFall || 0)} wickets`;
         }
-        return 'Match tie'
+        return 'Match Tie'
     }
     const nextScreen = () => {
         history.push('/bowing')

@@ -1,12 +1,11 @@
-import React, { useState, FunctionComponent as FC, useEffect } from 'react';
+import React, { useState, FunctionComponent as FC,useEffect } from 'react';
 import { BowlResults, BowlResultType } from '../constants';
 import { Button, Card, CardContent, Typography, CircularProgress } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { ITeam, ITeams, IPlayer, IOver, IBowlerOver } from '../interfaces';
+import { ITeam, IPlayer, IBowlerOver } from '../interfaces';
 import { ScoreCard, Cricle } from '../components';
 import { UpdateTeams, GetTeams } from '../actions';
-import { useHistory, Link } from "react-router-dom";
-import classes from '*.module.css';
+import { useHistory } from "react-router-dom";
 
 export const Match: FC = () => {
     const teamDetails = useSelector((state: any) => state.teams);
@@ -22,11 +21,11 @@ export const Match: FC = () => {
     const [bowlCounter, setBowlCounter] = useState<number>(0);
     const [isMatchCompleted, setmatchCompleted] = useState<boolean>(false)
 
-    React.useEffect(() => {
-        dispatch(GetTeams());
-    }, []);
+    // useEffect(() => {
+    //     dispatch(GetTeams());
+    // }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (Object.keys(teamDetails).length) {
             if (teamDetails.team_a.isInningCompleted) {
                 setBatingTeam(teamDetails.team_b)
@@ -202,7 +201,7 @@ export const Match: FC = () => {
     }
 
     const stopOver = (_batingTeam: ITeam, _bowlingTeam: ITeam, bowlerOver: IBowlerOver, timer: NodeJS.Timeout) => {
-        if (_batingTeam!.overs == undefined) {
+        if (_batingTeam!.overs === undefined) {
             _batingTeam!.overs = [];
         }
         _batingTeam!.overs.push({ bowlerName: _bowlingTeam.currentBowler?.name || '', ...bowlerOver })
@@ -229,10 +228,6 @@ export const Match: FC = () => {
     const avgRunRate = (): number | string => {
         const avgRR = ((batingTeam?.totalRun || 0) / (batingTeam?.overs?.length || 0))
         return (isNaN(avgRR) && !isFinite(avgRR)) ? 0 : avgRR.toFixed(2);
-    }
-
-    const matchStart = (): void => {
-        startOver(JSON.parse(JSON.stringify(teamDetails.team_a)), JSON.parse(JSON.stringify(teamDetails.team_b)));
     }
 
     const nextInningStart = (): void => {
@@ -263,7 +258,7 @@ export const Match: FC = () => {
         if(runA < runB){
           return  `${bowlingTeam!.name} beat ${batingTeam!.name} by ${runB - runA} runs`;
         }
-        return  'Match tie'
+        return  'Match Tie'
     }
 
     if (!batingTeam) {

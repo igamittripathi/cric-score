@@ -35,11 +35,16 @@ export const Input = withStyles((theme: Theme) =>
         borderColor: '#80bdff',
         boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
       },
-      '&:invalid': {
-        //borderColor: 'red',
-        borderWidth: 1,
+      '&:valid':{
         '&:focus': {
-          boxShadow: '0 0 0 0.2rem rgba(255, 26, 68, 0.25)'
+          borderColor: 'green',
+          boxShadow: '0 0 0 0.1rem rgba(200, 243, 164, 0.25)'
+        }
+      },
+      '&:invalid': {
+        '&:focus': {
+          borderColor: 'red',
+          boxShadow: '0 0 0 0.1rem rgba(255, 26, 68, 0.25)'
         }
       }
     },

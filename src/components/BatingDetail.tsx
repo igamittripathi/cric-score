@@ -23,7 +23,7 @@ const useStyles = makeStyles({
     }
 });
 
-export const BatingDetail: React.FC<ITeam> = React.memo<ITeam>(({ playres, name, totalRun = 0, overs, noBowls = 0, wideBowls = 0, wicketFall }) => {
+export const BatingDetail: React.StatelessComponent<ITeam> = React.memo<ITeam>(({ playres, name, totalRun = 0, overs, noBowls = 0, wideBowls = 0, wicketFall }) => {
     const classes = useStyles();
     return (
         <TableContainer component={Paper}>

@@ -1,46 +1,69 @@
-import React from "react";
-import { shallow } from "enzyme";
+import React,{ useState as useStateMock } from "react";
+import { shallow, mount } from "enzyme";
 import configureStore from "redux-mock-store";
-import {TeamCreater} from './TeamCreater';
+import { TeamCreater } from './TeamCreater';
+import { Team } from '../components'
+import reactMock from "react";
 
+import { useSelector as originalUseSelector, useDispatch as originalUseDispatch, Provider } from "react-redux";
+import { RootState } from "../reducers";
+import { CircularProgress } from "@material-ui/core";
+import { initialState } from "../constants";
 
-describe("RecipeList", () => {
-    let wrapper;
-    let useEffect;
-    let store;
-    const mockUseEffect = () => {
-      useEffect.mockImplementationOnce(f => f());
-    };
-    beforeEach(() => {
-      /* mocking store */
-      store = configureStore([thunk])({
-        recipes: fakeRecipes,
-        isLoading: false,
-        error: null
-      });
-      /* mocking useEffect */
-      useEffect = jest.spyOn(React, "useEffect");
-      mockUseEffect(); // 2 times
-      mockUseEffect(); //
-      /* mocking useSelector on our mock store */
-      jest
-         .spyOn(ReactReduxHooks, "useSelector")
-         .mockImplementation(state => store.getState());
-    /* mocking useDispatch on our mock store  */
+const useSelector = (state: any) => originalUseSelector(state);
+const useDispatch = () => originalUseDispatch();
+
+const ReactReduxHooks = { useSelector, useDispatch };
+
+const setHookState = (newState: {}) => jest.fn().mockImplementation((state: {}) => [
+  newState,
+  (newState: {}) => { }
+])
+
+describe("TeamCreater", () => {
+  let wrapper:any;
+  let useEffect:any;
+  let store:any;
+  let initialStore = initialState;
+
+  const setState = jest.fn();
+  const useStateSpy = jest.spyOn(React, 'useState')
+  
+  const mockUseEffect = () => {
+    useEffect.mockImplementationOnce((f: Function) => f());
+  };
+  beforeEach(() => {
+    /* mocking store */
+    store = configureStore()(initialStore);
+    useEffect = jest.spyOn(React, "useEffect");
+
+    const useStateMock: any = (initState: any) => [initState, setState];
+
+    mockUseEffect();
+    mockUseEffect();
+
     jest
-       .spyOn(ReactReduxHooks, "useDispatch")
-       .mockImplementation(() => store.dispatch);
-    /* shallow rendering */
-       wrapper = shallow(<RecipeList store={store} />);
-    });
-    describe("on mount", () => {
-      it("dispatch search action to store", () => {
-        const actions = store.getActions();
-        expect(actions).toEqual([{ type: "SEARCH", query: "all" }, 
-        { type: "SEARCH_SUCCESS", recipes: fakeRecipes }]);
-      });
-    });
-    it("should render RecipeItem components if recipes.length > 0", 
-      () => {expect(wrapper.find(RecipeItem)).toHaveLength(3);
-    });
+      .spyOn(ReactReduxHooks, "useSelector")
+      .mockImplementation(state => store.getState());
+
+    jest
+      .spyOn(ReactReduxHooks, "useDispatch")
+      .mockImplementation(() => store.dispatch);
+      wrapper = shallow(<Provider store={store}><TeamCreater /></Provider>);
   });
+
+  describe("on start", () => {
+
+    test('should render Component correctly', () => {
+      wrapper.setProps({teams:initialStore});
+      console.log(wrapper);
+      //expect( wrapper.state('teams')).toEqual(initialStore)
+    });
+
+    test("should render CircularProgress if teams is empty", () => {
+       //expect(wrapper.find(CircularProgress).exists()).toEqual(false);
+    });
+
+  });
+
+});

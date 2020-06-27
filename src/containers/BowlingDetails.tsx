@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles, createStyles, Theme, Divider, Card, CardContent, Typography, CircularProgress, Button } from '@material-ui/core';
+import { makeStyles, createStyles, Theme, Divider, CircularProgress, Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { IPlayer, ITeam, IBowlerOver } from '../interfaces';
 import { GetTeams } from '../actions';
@@ -33,7 +33,6 @@ export const BowlingDetails: React.FC = () => {
 
     const [team_a, setTeamA] = React.useState<ITeam>();
     const [team_b, setTeamB] = React.useState<ITeam>();
-    const [result, setResult] = React.useState<string>();
 
     React.useEffect(() => {
         dispatch(GetTeams());

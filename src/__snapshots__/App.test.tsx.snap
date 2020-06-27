@@ -7,11 +7,3 @@ exports[`App should render Component correctly 1`] = `
   <AppRoute />
 </div>
 `;
-
-exports[`App should render the Title Component correctly 1`] = `
-<div
-  className="App"
->
-  <AppRoute />
-</div>
-`;

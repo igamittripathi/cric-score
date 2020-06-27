@@ -1,0 +1,4 @@
+export const GET_TEAMS = 'GET_TEAMS'
+export const SAVE_TEAMS_INIT = 'SAVE_TEAMS_INIT'
+export const UPDATE_TEAMS_INIT = 'UPDATE_TEAMS_INIT';
+export const SAVE_TEAM_SUCCESS= 'SAVE_TEAM_SUCCESS';

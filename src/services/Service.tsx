@@ -3,7 +3,7 @@ import { ITeams } from "../interfaces";
 const url:string=`https://cric-score-ad64d.firebaseio.com/`;
 
 export const getTeamDetails = () => {
-    const id = localStorage.getItem('id')
+    const id = localStorage.getItem('id');
     return fetch(`${url}teams/${id}/.json`)
         .then(res => res.json())
         .then((res) => {

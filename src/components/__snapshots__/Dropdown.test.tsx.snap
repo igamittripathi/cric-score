@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dropdwon Cricle should render properly 1`] = `
+<WithStyles(ForwardRef(FormControl))
+  className="makeStyles-margin-1"
+>
+  <WithStyles(ForwardRef(InputLabel))
+    error={false}
+    htmlFor="selectundefined"
+    required={false}
+  >
+    Type
+  </WithStyles(ForwardRef(InputLabel))>
+  <WithStyles(ForwardRef(Select))
+    error={false}
+    input={<ForwardRef(WithStyles) />}
+    required={false}
+  />
+</WithStyles(ForwardRef(FormControl))>
+`;

@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Input Input should render properly 1`] = `
+<WithStyles(ForwardRef(InputBase))
+  classes={
+    Object {
+      "input": "WithStyles(ForwardRef(InputBase))-input-2",
+      "root": "WithStyles(ForwardRef(InputBase))-root-1",
+    }
+  }
+/>
+`;
