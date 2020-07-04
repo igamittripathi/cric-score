@@ -8,6 +8,8 @@ interface IinitialState {
 }
 
 export const TeamReducers = (state: ITeams = initialState, action: { type: string, payload?: any }) => {
+    console.log(action.type);
+    console.log(action.payload);
     switch (action.type) {
         case SAVE_TEAMS_INIT:
             state = { ...state, ...action.payload };

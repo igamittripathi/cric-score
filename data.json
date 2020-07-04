@@ -1,0 +1,330 @@
+{
+    "team_a": {
+      "boundryFour": 1,
+      "boundrySix": 0,
+      "extraRun": 1,
+      "id": 33,
+      "isInningCompleted": true,
+      "name": "India",
+      "noBowls": 1,
+      "onNonStrickPlayer": {
+        "batingOrder": 1,
+        "boundryFour": 1,
+        "boundrySix": 0,
+        "bowlPlayed": 4,
+        "hasStrike": true,
+        "isError": false,
+        "isRequired": true,
+        "name": "A2",
+        "status": "Not Out",
+        "teamId": "TeamA",
+        "totalRun": 5,
+        "type": "batsman"
+      },
+      "onStrickPlayer": {
+        "batingOrder": 0,
+        "boundryFour": 0,
+        "boundrySix": 0,
+        "bowlPlayed": 3,
+        "hasStrike": true,
+        "isError": false,
+        "isRequired": true,
+        "name": "A1",
+        "status": "Not Out",
+        "teamId": "TeamA",
+        "totalRun": 4,
+        "type": "batsman"
+      },
+      "overs": [
+        {
+          "boundryFour": 1,
+          "boundrySix": 0,
+          "bowlResult": [
+            2,
+            1,
+            1,
+            "NB",
+            0,
+            4,
+            1
+          ],
+          "bowlerName": "B7",
+          "noBowls": 1,
+          "overNumber": 1,
+          "totalRun": 10,
+          "wicketFall": 0,
+          "wideBowls": 0
+        }
+      ],
+      "playres": [
+        {
+          "batingOrder": 0,
+          "boundryFour": 0,
+          "boundrySix": 0,
+          "bowlPlayed": 3,
+          "hasStrike": true,
+          "isError": false,
+          "isRequired": true,
+          "name": "A1",
+          "status": "Not Out",
+          "teamId": "TeamA",
+          "totalRun": 4,
+          "type": "batsman"
+        },
+        {
+          "batingOrder": 1,
+          "boundryFour": 1,
+          "boundrySix": 0,
+          "bowlPlayed": 4,
+          "hasStrike": true,
+          "isError": false,
+          "isRequired": true,
+          "name": "A2",
+          "status": "Not Out",
+          "teamId": "TeamA",
+          "totalRun": 5,
+          "type": "batsman"
+        },
+        {
+          "batingOrder": 2,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "A3",
+          "teamId": "TeamA",
+          "type": "batsman"
+        },
+        {
+          "batingOrder": 3,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "A4",
+          "teamId": "TeamA",
+          "type": "batsman"
+        },
+        {
+          "batingOrder": 4,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "A5",
+          "teamId": "TeamA",
+          "type": "batsman"
+        },
+        {
+          "batingOrder": 5,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "A6",
+          "teamId": "TeamA",
+          "type": "batsman"
+        },
+        {
+          "batingOrder": 6,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "A7",
+          "teamId": "TeamA",
+          "type": "bowler"
+        },
+        {
+          "batingOrder": 7,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "A8",
+          "teamId": "TeamA",
+          "type": "bowler"
+        },
+        {
+          "batingOrder": 8,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "A9",
+          "teamId": "TeamA",
+          "type": "bowler"
+        },
+        {
+          "batingOrder": 9,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "A10",
+          "teamId": "TeamA",
+          "type": "bowler"
+        },
+        {
+          "batingOrder": 10,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "A11",
+          "teamId": "TeamA",
+          "type": "bowler"
+        }
+      ],
+      "totalRun": 10,
+      "wicketFall": 0,
+      "wideBowls": 0
+    },
+    "team_b": {
+      "currentBowler": {
+        "batingOrder": 6,
+        "hasStrike": false,
+        "isError": false,
+        "isRequired": true,
+        "name": "B7",
+        "overs": [
+          {
+            "boundryFour": 1,
+            "boundrySix": 0,
+            "bowlResult": [
+              2,
+              1,
+              1,
+              "NB",
+              0,
+              4,
+              1
+            ],
+            "noBowls": 1,
+            "overNumber": 1,
+            "totalRun": 10,
+            "wicketFall": 0,
+            "wideBowls": 0
+          }
+        ],
+        "teamId": "TeamB",
+        "type": "bowler"
+      },
+      "id": 5,
+      "isInningCompleted": false,
+      "name": "England",
+      "playres": [
+        {
+          "batingOrder": 0,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "B1",
+          "teamId": "TeamB",
+          "type": "batsman"
+        },
+        {
+          "batingOrder": 1,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "B2",
+          "teamId": "TeamB",
+          "type": "batsman"
+        },
+        {
+          "batingOrder": 2,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "B3",
+          "teamId": "TeamB",
+          "type": "batsman"
+        },
+        {
+          "batingOrder": 3,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "B4",
+          "teamId": "TeamB",
+          "type": "batsman"
+        },
+        {
+          "batingOrder": 4,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "B5",
+          "teamId": "TeamB",
+          "type": "batsman"
+        },
+        {
+          "batingOrder": 5,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "B6",
+          "teamId": "TeamB",
+          "type": "batsman"
+        },
+        {
+          "batingOrder": 6,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "B7",
+          "overs": [
+            {
+              "boundryFour": 1,
+              "boundrySix": 0,
+              "bowlResult": [
+                2,
+                1,
+                1,
+                "NB",
+                0,
+                4,
+                1
+              ],
+              "noBowls": 1,
+              "overNumber": 1,
+              "totalRun": 10,
+              "wicketFall": 0,
+              "wideBowls": 0
+            }
+          ],
+          "teamId": "TeamB",
+          "type": "bowler"
+        },
+        {
+          "batingOrder": 7,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "B8",
+          "teamId": "TeamB",
+          "type": "bowler"
+        },
+        {
+          "batingOrder": 8,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "B9",
+          "teamId": "TeamB",
+          "type": "bowler"
+        },
+        {
+          "batingOrder": 9,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "B10",
+          "teamId": "TeamB",
+          "type": "bowler"
+        },
+        {
+          "batingOrder": 10,
+          "hasStrike": false,
+          "isError": false,
+          "isRequired": true,
+          "name": "B11",
+          "teamId": "TeamB",
+          "type": "bowler"
+        }
+      ],
+      "totalRun": 0
+    }
+  }

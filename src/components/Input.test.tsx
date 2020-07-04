@@ -20,14 +20,14 @@ describe("Input", () => {
         expect(wrapper.props().value).toEqual('india');
     });
 
-    test('allows us to onchange events', () => {
+    test('allows us to onChange events', () => {
         const onChange = jest.fn();
-        wrapper = createShallow()(<div> <Input required={true} onChange={onChange}/></div>);
+        wrapper = createShallow()(<div> <Input error={false} required={true} onChange={onChange}/></div>);
         act(() => {
             wrapper.find(Input).simulate('change', { target: { value: 'James' } });
         });
         wrapper.update();
-        expect(wrapper.find(Input).at(0).props().error).toBeUndefined();
+        expect(wrapper.find(Input).at(0).props().error).toBeFalsy();
     });
 
 });

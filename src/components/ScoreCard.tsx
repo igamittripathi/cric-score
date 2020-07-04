@@ -8,6 +8,7 @@ import Chip from '@material-ui/core/Chip';
 import { IPlayer } from '../interfaces';
 import SportsHandballSharpIcon from '@material-ui/icons/SportsHandballSharp';
 import SportsCricketSharpIcon from '@material-ui/icons/SportsCricketSharp';
+import CardActionArea from '@material-ui/core/CardActionArea';
 
 const useStyles = makeStyles({
     root: {
@@ -51,33 +52,35 @@ export const ScoreCard: React.FC<IScoreCardProps> = React.memo<IScoreCardProps>(
     const classes = useStyles();
     return (
         <Card className={classes.root}>
-            <CardContent>
-                <Typography variant="h2" color="textSecondary" component="h2">
-                    {teamName} <SportsCricketSharpIcon />
-                </Typography>
+            <CardActionArea>
+                <CardContent>
+                    <Typography variant="h2" color="textSecondary" component="h2">
+                        {teamName} <SportsCricketSharpIcon />
+                    </Typography>
 
-                <Typography variant="h4" component="h2">
-                    Score : {`${run}/${wicket}`}
-                </Typography>
-                <Typography className={classes.pos} color="textSecondary">
-                    Over: {over}/{totalOver} <span className={classes.vl}></span> Remaining Balls: {remaningBowl}
-                </Typography>
-                {strikeBatman ? <Typography variant="body2" component="p">
-                    <SportsCricketSharpIcon /> {strikeBatman.name}* : {strikeBatman.totalRun || 0}
-                </Typography> : ''}
-                {nonStrikeBatman ? <Typography variant="body2" component="p">
-                    <SportsCricketSharpIcon />{nonStrikeBatman.name} : {nonStrikeBatman.totalRun || 0}
-                </Typography> : ''}
-                {isAvgRunRateDisplay ? <Typography variant="body2" component="p">
-                    Net RR: {netRunRate}
-                </Typography> : ''}
+                    <Typography variant="h4" component="h2">
+                        Score : {`${run}/${wicket}`}
+                    </Typography>
+                    <Typography className={classes.pos} color="textSecondary">
+                        Over: {over}/{totalOver} <span className={classes.vl}></span> Remaining Balls: {remaningBowl}
+                    </Typography>
+                    {strikeBatman ? <Typography variant="body2" component="p">
+                        <SportsCricketSharpIcon /> {strikeBatman.name}* : {strikeBatman.totalRun || 0}
+                    </Typography> : ''}
+                    {nonStrikeBatman ? <Typography variant="body2" component="p">
+                        <SportsCricketSharpIcon />{nonStrikeBatman.name} : {nonStrikeBatman.totalRun || 0}
+                    </Typography> : ''}
+                    {isAvgRunRateDisplay ? <Typography variant="body2" component="p">
+                        Net RR: {netRunRate}
+                    </Typography> : ''}
 
-                <Typography variant="body2" component="p">
-                    <SportsHandballSharpIcon />: {bowlerName?.name}
-                    <br />
-                    {overBowlResults.map((item: BowlResultType, idx: number) => <Chip key={idx} label={item} variant="outlined" />)}
-                </Typography>
-            </CardContent>
+                    <Typography variant="body2" component="p">
+                        <SportsHandballSharpIcon />: {bowlerName?.name}
+                        <br />
+                        {overBowlResults.map((item: BowlResultType, idx: number) => <Chip key={idx} label={item} variant="outlined" />)}
+                    </Typography>
+                </CardContent>
+            </CardActionArea>
         </Card>
     );
 })

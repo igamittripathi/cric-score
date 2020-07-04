@@ -1,14 +1,14 @@
 import React, { useState, FunctionComponent as FC, useEffect } from 'react';
 import { Team } from '../components';
-import { PlayerTypes } from '../constants'
+import { PlayerTypes, playresIndia, playresEngland } from '../constants'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import { Button, CircularProgress } from '@material-ui/core';
 import { ITeam, ITeams, IPlayer, playerType } from '../interfaces';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { SaveTeams } from '../actions';
 import { useHistory } from "react-router-dom";
-import { RootState } from '../reducers';
+import { selectTeams } from '../selectors';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -24,14 +24,14 @@ export const TeamCreater: FC = () => {
     const classes = useStyles();
     const history = useHistory();
     const [teams, setTeams] = useState<ITeams>()
-
-    const {teams: teamDetails} = useSelector((state: RootState) =>state);
+    const [isFormValid, setFormValid] = useState<boolean>(true);
+    const teamDetails = useSelector(selectTeams, shallowEqual);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         localStorage.clear();
-        const { team_a, team_b } = { ...teamDetails } as ITeams;
+        const { team_a, team_b } = JSON.parse(JSON.stringify(teamDetails)) as ITeams;
         for (let i = 0; i < 11; i++) {
             let _type: playerType = 'batsman';
             if (i > 5) {
@@ -45,8 +45,8 @@ export const TeamCreater: FC = () => {
                 isError: false,
                 isRequired: true
             }
-            const team_a_player: IPlayer = { name: 'A'+(i+1), teamId: 'TeamA', ...playersDefaultProps }
-            const team_b_player: IPlayer = { name: 'B'+(i+1), teamId: 'TeamB', ...playersDefaultProps }
+            const team_a_player: IPlayer = { name: playresIndia[i], teamId: 'TeamA', ...playersDefaultProps }
+            const team_b_player: IPlayer = { name: playresEngland[i], teamId: 'TeamB', ...playersDefaultProps }
             team_a.playres.push({ ...team_a_player })
             team_b.playres.push({ ...team_b_player });
         }
@@ -65,6 +65,7 @@ export const TeamCreater: FC = () => {
 
     const onNameChangeHandler = (e: React.ChangeEvent<HTMLInputElement>, idx: number, _team: ITeam) => {
         let { team_a, team_b } = { ...teams };
+        debugger
         _team.playres[idx] = { ..._team.playres[idx], name: e.target.value, isError: !(e.target.value.length > 0) };
         if (_team.id === team_a!.id) {
             team_a = _team;
@@ -72,7 +73,7 @@ export const TeamCreater: FC = () => {
         else {
             team_b = _team;
         }
-        setTeams({ team_a: team_a!, team_b: team_b! })
+        setTeams({team_a: validate(team_a!), team_b: validate(team_b!) })
     }
 
     const onPlayerTypeChangeHandler = (e: React.ChangeEvent<{ value: unknown }>, idx: number, _team: ITeam) => {
@@ -84,7 +85,7 @@ export const TeamCreater: FC = () => {
         else {
             team_b = _team;
         }
-        setTeams({ team_a: team_a!, team_b: team_b! })
+        setTeams({ team_a: validate(team_a!), team_b: validate(team_b!) })
     }
 
     const onBlur = (e: React.FocusEvent<HTMLInputElement>, idx: number, _team: ITeam) => {
@@ -96,12 +97,12 @@ export const TeamCreater: FC = () => {
         else {
             team_b = _team;
         }
+
         setTeams({ team_a: team_a!, team_b: team_b! })
     }
 
-    const validate = (team: ITeam): boolean => {
+    const validate = (team: ITeam): ITeam => {
         let isValid = true;
-        debugger;
         for (let i = 0; i < team.playres.length; i++) {
             if (team.playres[i].name.length === 0) {
                 team.playres[i].isError = true;
@@ -113,19 +114,18 @@ export const TeamCreater: FC = () => {
                 else {
                     team_b = team;
                 }
-                setTeams({ team_a: team_a!, team_b: team_b! })
                 break;
             }
         }
         if (isValid)
             isValid = (team.name.length > 0)
-
-        return isValid;
+        setFormValid(isValid);
+        return team;
     }
 
     const onSubmit = (e: any) => {
         e?.preventDefault();
-        if (validate(teams!.team_a) && validate(teams!.team_b)) {
+        if (isFormValid) {
             dispatch(SaveTeams(teams!));
             history.push('/matchstart')
         }
@@ -158,7 +158,7 @@ export const TeamCreater: FC = () => {
                         playerTypes={PlayerTypes} />
                 </div>
             </div>
-            <Button type="submit" variant="contained" color="primary" id="submit">
+            <Button disabled={!isFormValid} onClick={onSubmit} variant="contained" color="primary" id="submit">
                 Start Match
             </Button>
         </form>)

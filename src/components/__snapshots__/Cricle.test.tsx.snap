@@ -1,17 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`BowlingDetail BatingDetail should render properly 1`] = `
-<div
-  className="makeStyles-root-1"
->
-  <WithStyles(ForwardRef(Avatar))
-    className="makeStyles-large-2"
-  >
-    0
-  </WithStyles(ForwardRef(Avatar))>
-</div>
-`;
-
 exports[`Cricle Cricle should render properly 1`] = `
 <div
   className="makeStyles-root-1"

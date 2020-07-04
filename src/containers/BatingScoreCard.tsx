@@ -5,7 +5,7 @@ import { IPlayer, ITeam } from '../interfaces';
 import { GetTeams } from '../actions';
 import { BatingDetail } from '../components';
 import { useHistory } from 'react-router-dom';
-
+import {selectTeams} from '../selectors'
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
@@ -42,7 +42,7 @@ export const BatingScoreCard: React.FC = () => {
     const classes = useStyles();
     const history = useHistory();
     const dispatch = useDispatch();
-    const teamDetails = useSelector((state: any) => state.teams);
+    const teamDetails = useSelector(selectTeams);
 
     const [team_a, setTeamA] = React.useState<ITeam>();
     const [team_b, setTeamB] = React.useState<ITeam>();
